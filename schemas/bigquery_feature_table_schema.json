@@ -1,0 +1,51 @@
+[
+  {"name": "h3_index",        "type": "STRING",  "mode": "REQUIRED", "description": "H3 cell index (resolution 7 or 8)"},
+  {"name": "feature_date",    "type": "DATE",    "mode": "REQUIRED", "description": "Snapshot date; partition key for point-in-time correct lookup"},
+  {"name": "market_id",       "type": "STRING",  "mode": "REQUIRED", "description": "Market identifier (e.g. nyc, la, chicago)"},
+  {"name": "h3_resolution",   "type": "INTEGER", "mode": "REQUIRED", "description": "H3 resolution used for this cell (7 or 8)"},
+
+  {"name": "dist_nearest_tower_km",      "type": "FLOAT64", "mode": "NULLABLE", "description": "Distance to nearest Verizon tower (km)"},
+  {"name": "dist_nearest_competitor_km", "type": "FLOAT64", "mode": "NULLABLE", "description": "Distance to nearest competitor site (km)"},
+  {"name": "dist_nearest_road_km",       "type": "FLOAT64", "mode": "NULLABLE", "description": "Distance to nearest major road (km)"},
+  {"name": "dist_nearest_residential_km","type": "FLOAT64", "mode": "NULLABLE", "description": "Distance to nearest residential zone centroid (km)"},
+  {"name": "dist_nearest_fiber_km",      "type": "FLOAT64", "mode": "NULLABLE", "description": "Distance to nearest fiber/backhaul access point (km)"},
+
+  {"name": "pop_density_per_km2",        "type": "FLOAT64", "mode": "NULLABLE", "description": "Population per km²"},
+  {"name": "subscriber_density_per_km2", "type": "FLOAT64", "mode": "NULLABLE", "description": "Verizon subscribers per km²"},
+  {"name": "building_density_per_km2",   "type": "FLOAT64", "mode": "NULLABLE", "description": "Building footprints per km²"},
+  {"name": "tower_density_5km",          "type": "FLOAT64", "mode": "NULLABLE", "description": "Verizon tower count within 5 km radius"},
+  {"name": "competitor_density_5km",     "type": "FLOAT64", "mode": "NULLABLE", "description": "Competitor site count within 5 km radius"},
+
+  {"name": "rsrp_median_dbm",            "type": "FLOAT64", "mode": "NULLABLE", "description": "Median RSRP (dBm) in cell over lookback period"},
+  {"name": "rsrp_p10_dbm",              "type": "FLOAT64", "mode": "NULLABLE", "description": "10th percentile RSRP (dBm)"},
+  {"name": "rsrp_p90_dbm",              "type": "FLOAT64", "mode": "NULLABLE", "description": "90th percentile RSRP (dBm)"},
+  {"name": "sinr_median_db",            "type": "FLOAT64", "mode": "NULLABLE", "description": "Median SINR (dB)"},
+  {"name": "sinr_p10_db",               "type": "FLOAT64", "mode": "NULLABLE", "description": "10th percentile SINR (dB)"},
+  {"name": "cqi_median",                "type": "FLOAT64", "mode": "NULLABLE", "description": "Median Channel Quality Indicator"},
+  {"name": "weak_signal_pct",           "type": "FLOAT64", "mode": "NULLABLE", "description": "% of samples with RSRP < -110 dBm"},
+  {"name": "dropped_call_rate",         "type": "FLOAT64", "mode": "NULLABLE", "description": "Dropped calls per 1000 attempts"},
+  {"name": "throughput_degradation_ratio","type":"FLOAT64", "mode": "NULLABLE", "description": "Peak-to-off-peak throughput ratio (higher = more congestion)"},
+
+  {"name": "revenue_per_km2",           "type": "FLOAT64", "mode": "NULLABLE", "description": "Revenue (USD) per km²"},
+  {"name": "churn_rate",                "type": "FLOAT64", "mode": "NULLABLE", "description": "Subscriber churn rate (proportion, 0–1)"},
+  {"name": "complaint_rate_per_1k",     "type": "FLOAT64", "mode": "NULLABLE", "description": "Complaints per 1000 subscribers"},
+  {"name": "nps_promoter_pct",          "type": "FLOAT64", "mode": "NULLABLE", "description": "NPS promoter percentage"},
+  {"name": "nps_detractor_pct",         "type": "FLOAT64", "mode": "NULLABLE", "description": "NPS detractor percentage"},
+  {"name": "arpu_tier",                 "type": "INTEGER", "mode": "NULLABLE", "description": "ARPU bucket (1=low, 2=mid, 3=high)"},
+
+  {"name": "sim_coverage_radius_km",    "type": "FLOAT64", "mode": "NULLABLE", "description": "[SYNTHETIC] Predicted coverage radius of hypothetical new tower (Hata model)"},
+  {"name": "sim_pop_reach",             "type": "FLOAT64", "mode": "NULLABLE", "description": "[SYNTHETIC] Estimated additional population reached if gap is closed"},
+  {"name": "sim_interference_delta",    "type": "FLOAT64", "mode": "NULLABLE", "description": "[SYNTHETIC] Estimated interference change from new site (dB)"},
+
+  {"name": "terrain_elevation_m",       "type": "FLOAT64", "mode": "NULLABLE", "description": "Median terrain elevation (m) in cell"},
+  {"name": "terrain_slope_deg",         "type": "FLOAT64", "mode": "NULLABLE", "description": "Mean terrain slope (degrees)"},
+  {"name": "urban_clutter_index",       "type": "FLOAT64", "mode": "NULLABLE", "description": "Urban clutter density index (0–1)"},
+
+  {"name": "is_regulatory_constrained", "type": "BOOL",    "mode": "NULLABLE", "description": "True if cell overlaps FAA/environmental/municipal constraint zone"},
+  {"name": "has_coverage_hole",         "type": "BOOL",    "mode": "NULLABLE", "description": "True if no Verizon tower within propagation distance"},
+
+  {"name": "coverage_gap_label",        "type": "INTEGER", "mode": "NULLABLE", "description": "Training label: 1 = coverage gap, 0 = adequate (null = unlabeled)"},
+  {"name": "roi_label_usd",             "type": "FLOAT64", "mode": "NULLABLE", "description": "Training label: observed revenue uplift 12 months post-build (null if unknown)"},
+
+  {"name": "created_at",               "type": "TIMESTAMP","mode": "REQUIRED", "description": "Row creation timestamp (UTC)"}
+]

@@ -24,7 +24,7 @@ from kfp import dsl
 from kfp.dsl import component, Input, Output, Dataset, Model, Metrics
 from google.cloud import aiplatform
 
-PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "verizon-pci-prod")
+PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "telco-pci-prod")
 REGION = os.environ.get("GCP_REGION", "us-central1")
 PIPELINE_ROOT = f"gs://{PROJECT_ID}-ml-artifacts/pipeline_runs"
 BQ_DATASET_FEATURES = "pci_features"

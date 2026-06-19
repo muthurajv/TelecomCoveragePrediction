@@ -16,7 +16,7 @@ from google.cloud import bigquery, monitoring_v3
 
 logger = logging.getLogger(__name__)
 
-PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "verizon-pci-prod")
+PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "telco-pci-prod")
 MONITORING_CLIENT = monitoring_v3.MetricServiceClient()
 PROJECT_NAME = f"projects/{PROJECT_ID}"
 

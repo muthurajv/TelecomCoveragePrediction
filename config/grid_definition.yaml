@@ -1,7 +1,7 @@
 project:
-  gcp_project_id: "verizon-pci-prod"
+  gcp_project_id: "telco-pci-prod"
   gcp_region: "us-central1"
-  gcs_bucket: "verizon-pci-data"
+  gcs_bucket: "telco-pci-data"
 
 h3_grid:
   urban:

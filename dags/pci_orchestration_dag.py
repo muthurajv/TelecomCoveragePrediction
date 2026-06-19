@@ -15,7 +15,7 @@ from airflow.providers.google.cloud.operators.vertex_ai.pipeline_job import (
 )
 from airflow.utils.dates import days_ago
 
-PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "verizon-pci-prod")
+PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "telco-pci-prod")
 REGION = os.environ.get("GCP_REGION", "us-central1")
 PIPELINE_TEMPLATE = f"gs://{PROJECT_ID}-ml-artifacts/pipelines/pci_weekly_pipeline.yaml"
 
@@ -24,7 +24,7 @@ DEFAULT_ARGS = {
     "retries": 2,
     "retry_delay": timedelta(minutes=10),
     "email_on_failure": True,
-    "email": ["pci-oncall@verizon.com"],
+    "email": ["pci-oncall@telco.com"],
 }
 
 with DAG(

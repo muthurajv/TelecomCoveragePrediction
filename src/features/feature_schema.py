@@ -32,7 +32,7 @@ class FeatureSpec:
 
 FEATURE_SPECS: list[FeatureSpec] = [
     # ── Distance ────────────────────────────────────────────────────────────────
-    FeatureSpec("dist_nearest_tower_km",      FeatureFamily.DISTANCE, "float64", True,  "Nearest Verizon tower (km)"),
+    FeatureSpec("dist_nearest_tower_km",      FeatureFamily.DISTANCE, "float64", True,  "Nearest telco tower (km)"),
     FeatureSpec("dist_nearest_competitor_km", FeatureFamily.DISTANCE, "float64", True,  "Nearest competitor site (km)"),
     FeatureSpec("dist_nearest_road_km",       FeatureFamily.DISTANCE, "float64", True,  "Nearest major road (km)"),
     FeatureSpec("dist_nearest_residential_km",FeatureFamily.DISTANCE, "float64", True,  "Nearest residential zone centroid (km)"),
@@ -40,9 +40,9 @@ FEATURE_SPECS: list[FeatureSpec] = [
 
     # ── Density ─────────────────────────────────────────────────────────────────
     FeatureSpec("pop_density_per_km2",        FeatureFamily.DENSITY,  "float64", True,  "Population per km²"),
-    FeatureSpec("subscriber_density_per_km2", FeatureFamily.DENSITY,  "float64", True,  "Verizon subscribers per km²"),
+    FeatureSpec("subscriber_density_per_km2", FeatureFamily.DENSITY,  "float64", True,  "telco subscribers per km²"),
     FeatureSpec("building_density_per_km2",   FeatureFamily.DENSITY,  "float64", True,  "Building footprints per km²"),
-    FeatureSpec("tower_density_5km",          FeatureFamily.DENSITY,  "float64", True,  "Verizon tower count within 5 km"),
+    FeatureSpec("tower_density_5km",          FeatureFamily.DENSITY,  "float64", True,  "telco tower count within 5 km"),
     FeatureSpec("competitor_density_5km",     FeatureFamily.DENSITY,  "float64", True,  "Competitor site count within 5 km"),
 
     # ── RF ──────────────────────────────────────────────────────────────────────
@@ -76,7 +76,7 @@ FEATURE_SPECS: list[FeatureSpec] = [
 
     # ── Meta flags ──────────────────────────────────────────────────────────────
     FeatureSpec("is_regulatory_constrained", FeatureFamily.META,     "bool",    True,  "Overlaps FAA/environmental constraint zone"),
-    FeatureSpec("has_coverage_hole",         FeatureFamily.META,     "bool",    True,  "No Verizon tower within propagation distance"),
+    FeatureSpec("has_coverage_hole",         FeatureFamily.META,     "bool",    True,  "No telco tower within propagation distance"),
 ]
 
 # Feature name lists for quick access

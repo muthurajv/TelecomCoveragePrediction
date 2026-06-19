@@ -7,7 +7,7 @@ terraform {
     }
   }
   backend "gcs" {
-    bucket = "verizon-pci-tf-state"
+    bucket = "telco-pci-tf-state"
     prefix = "terraform/state"
   }
 }

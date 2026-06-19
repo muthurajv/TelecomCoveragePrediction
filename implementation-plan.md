@@ -1,4 +1,4 @@
-# Verizon Predictive Coverage Intelligence — Implementation Plan (GCP/BigQuery)
+# Telco Predictive Coverage Intelligence — Implementation Plan (GCP/BigQuery)
 > Validated and refined by 3-agent ultraplan review
 
 ## Context

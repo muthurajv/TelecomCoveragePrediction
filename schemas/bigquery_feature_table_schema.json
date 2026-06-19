@@ -4,16 +4,16 @@
   {"name": "market_id",       "type": "STRING",  "mode": "REQUIRED", "description": "Market identifier (e.g. nyc, la, chicago)"},
   {"name": "h3_resolution",   "type": "INTEGER", "mode": "REQUIRED", "description": "H3 resolution used for this cell (7 or 8)"},
 
-  {"name": "dist_nearest_tower_km",      "type": "FLOAT64", "mode": "NULLABLE", "description": "Distance to nearest Verizon tower (km)"},
+  {"name": "dist_nearest_tower_km",      "type": "FLOAT64", "mode": "NULLABLE", "description": "Distance to nearest telco tower (km)"},
   {"name": "dist_nearest_competitor_km", "type": "FLOAT64", "mode": "NULLABLE", "description": "Distance to nearest competitor site (km)"},
   {"name": "dist_nearest_road_km",       "type": "FLOAT64", "mode": "NULLABLE", "description": "Distance to nearest major road (km)"},
   {"name": "dist_nearest_residential_km","type": "FLOAT64", "mode": "NULLABLE", "description": "Distance to nearest residential zone centroid (km)"},
   {"name": "dist_nearest_fiber_km",      "type": "FLOAT64", "mode": "NULLABLE", "description": "Distance to nearest fiber/backhaul access point (km)"},
 
   {"name": "pop_density_per_km2",        "type": "FLOAT64", "mode": "NULLABLE", "description": "Population per km²"},
-  {"name": "subscriber_density_per_km2", "type": "FLOAT64", "mode": "NULLABLE", "description": "Verizon subscribers per km²"},
+  {"name": "subscriber_density_per_km2", "type": "FLOAT64", "mode": "NULLABLE", "description": "telco subscribers per km²"},
   {"name": "building_density_per_km2",   "type": "FLOAT64", "mode": "NULLABLE", "description": "Building footprints per km²"},
-  {"name": "tower_density_5km",          "type": "FLOAT64", "mode": "NULLABLE", "description": "Verizon tower count within 5 km radius"},
+  {"name": "tower_density_5km",          "type": "FLOAT64", "mode": "NULLABLE", "description": "telco tower count within 5 km radius"},
   {"name": "competitor_density_5km",     "type": "FLOAT64", "mode": "NULLABLE", "description": "Competitor site count within 5 km radius"},
 
   {"name": "rsrp_median_dbm",            "type": "FLOAT64", "mode": "NULLABLE", "description": "Median RSRP (dBm) in cell over lookback period"},
@@ -42,7 +42,7 @@
   {"name": "urban_clutter_index",       "type": "FLOAT64", "mode": "NULLABLE", "description": "Urban clutter density index (0–1)"},
 
   {"name": "is_regulatory_constrained", "type": "BOOL",    "mode": "NULLABLE", "description": "True if cell overlaps FAA/environmental/municipal constraint zone"},
-  {"name": "has_coverage_hole",         "type": "BOOL",    "mode": "NULLABLE", "description": "True if no Verizon tower within propagation distance"},
+  {"name": "has_coverage_hole",         "type": "BOOL",    "mode": "NULLABLE", "description": "True if no telco tower within propagation distance"},
 
   {"name": "coverage_gap_label",        "type": "INTEGER", "mode": "NULLABLE", "description": "Training label: 1 = coverage gap, 0 = adequate (null = unlabeled)"},
   {"name": "roi_label_usd",             "type": "FLOAT64", "mode": "NULLABLE", "description": "Training label: observed revenue uplift 12 months post-build (null if unknown)"},

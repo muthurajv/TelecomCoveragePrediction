@@ -23,12 +23,12 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(
-    title="Verizon PCI API",
+    title="Telco PCI API",
     description="Predictive Coverage Intelligence — Coverage Opportunity Scores",
     version="1.0.0",
 )
 
-PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "verizon-pci-prod")
+PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "telco-pci-prod")
 BQ_DATASET = os.environ.get("BQ_DATASET_SCORING", "pci_scoring")
 
 _bq_client: Optional[bigquery.Client] = None

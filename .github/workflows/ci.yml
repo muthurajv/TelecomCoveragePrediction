@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    name: Lint, type-check, test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dev dependencies
+        run: pip install ruff mypy pytest pytest-cov fastapi pydantic httpx
+
+      - name: Lint (ruff)
+        run: ruff check src/ training/ shap/ monitoring/ pipelines/ dags/
+
+      - name: Type check (mypy)
+        run: mypy src/api/main.py src/features/feature_schema.py --ignore-missing-imports
+
+      - name: Run tests
+        run: pytest tests/ -v --cov=src --cov-report=term-missing
+
+  docker-build:
+    name: Build Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t pci-api:${{ github.sha }} .
+
+  terraform-validate:
+    name: Validate Terraform
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.8"
+
+      - name: Init (local backend for validation only)
+        run: terraform -chdir=infrastructure/terraform init -backend=false
+
+      - name: Validate
+        run: terraform -chdir=infrastructure/terraform validate
+
+      - name: Format check
+        run: terraform -chdir=infrastructure/terraform fmt -check -recursive

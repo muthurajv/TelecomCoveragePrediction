@@ -1,0 +1,108 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+  REGISTRY: us-central1-docker.pkg.dev
+  IMAGE: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/pci/api
+
+jobs:
+  deploy-api:
+    name: Build, push, and deploy API to Cloud Run
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # required for Workload Identity Federation
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP (keyless via Workload Identity Federation)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
+
+      - name: Build and push Docker image
+        run: |
+          docker build \
+            --tag ${{ env.IMAGE }}:${{ github.sha }} \
+            --tag ${{ env.IMAGE }}:latest \
+            .
+          docker push ${{ env.IMAGE }}:${{ github.sha }}
+          docker push ${{ env.IMAGE }}:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy pci-api \
+            --image ${{ env.IMAGE }}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --project ${{ env.PROJECT_ID }} \
+            --set-env-vars GCP_PROJECT_ID=${{ env.PROJECT_ID }},GCP_REGION=${{ env.REGION }} \
+            --min-instances 1 \
+            --max-instances 20 \
+            --cpu 2 \
+            --memory 2Gi \
+            --no-allow-unauthenticated \
+            --quiet
+
+      - name: Show Cloud Run URL
+        run: |
+          gcloud run services describe pci-api \
+            --region ${{ env.REGION }} \
+            --project ${{ env.PROJECT_ID }} \
+            --format "value(status.url)"
+
+  publish-pipeline:
+    name: Compile and publish Vertex AI Pipeline
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    needs: deploy-api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install pipeline dependencies
+        run: pip install kfp==2.7.0 google-cloud-aiplatform==1.57.0
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Compile Vertex AI Pipeline
+        run: python pipelines/pci_weekly_pipeline.py
+
+      - name: Upload pipeline YAML to GCS
+        run: |
+          gsutil cp pipelines/pci_weekly_pipeline.yaml \
+            gs://${{ env.PROJECT_ID }}-ml-artifacts/pipelines/pci_weekly_pipeline.yaml
+
+          # Also version by commit SHA for rollback
+          gsutil cp pipelines/pci_weekly_pipeline.yaml \
+            gs://${{ env.PROJECT_ID }}-ml-artifacts/pipelines/versions/pci_weekly_pipeline_${{ github.sha }}.yaml
+
+      - name: Summary
+        run: |
+          echo "### Deployment complete" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image**: \`${{ env.IMAGE }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Pipeline**: \`gs://${{ env.PROJECT_ID }}-ml-artifacts/pipelines/pci_weekly_pipeline.yaml\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY

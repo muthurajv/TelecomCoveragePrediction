@@ -86,12 +86,57 @@ Geospatial   ──► GCS (COG) ────► BigLake ──┘
 - `gcloud` CLI authenticated (`gcloud auth application-default login`)
 - Terraform >= 1.7
 
+## Environment Setup
+
+All configuration is driven by environment variables. A template is provided:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` with your values:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `GCP_PROJECT_ID` | GCP project ID | `telco-pci-prod` |
+| `GCP_REGION` | GCP region | `us-central1` |
+| `BQ_DATASET_SCORING` | BigQuery scoring dataset | `pci_scoring` |
+| `GCS_DATA_LAKE_BUCKET` | Raw data lake bucket | `telco-pci-prod-data-lake` |
+| `GCS_ML_ARTIFACTS_BUCKET` | ML artifacts bucket | `telco-pci-prod-ml-artifacts` |
+| `PUBSUB_RF_TELEMETRY_TOPIC` | RF telemetry ingest topic | `rf-telemetry-ingest` |
+| `MLFLOW_TRACKING_URI` | MLflow server URI | `http://localhost:5000` |
+| `VERTEX_PIPELINE_ROOT` | GCS root for pipeline runs | `gs://…/pipeline_runs` |
+| `API_PORT` | Local API port | `8000` |
+
+See `.env.example` for the full list. The `.env` file is gitignored — never commit it.
+
+Load the env before running any component:
+
+```bash
+export $(cat .env | xargs)
+```
+
+Or use `gcloud` for local GCP auth:
+
+```bash
+gcloud auth application-default login
+gcloud config set project YOUR_PROJECT_ID
+```
+
 ## Quick Start (Local API)
 
 ```bash
+# 1. Set up environment
+cp .env.example .env   # fill in your values
+export $(cat .env | xargs)
+
+# 2. Authenticate to GCP
+gcloud auth application-default login
+
+# 3. Install dependencies and start
 pip install fastapi "uvicorn[standard]" pydantic google-cloud-bigquery h3
 
-uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn src.api.main:app --host 0.0.0.0 --port $API_PORT --reload
 ```
 
 API docs at `http://localhost:8000/docs`. BQ-connected endpoints require GCP credentials and a provisioned dataset.
